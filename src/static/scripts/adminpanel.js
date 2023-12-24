@@ -2,7 +2,9 @@
 
 const header_elements = [
     {id:1, name:"Dashboard"},
-    {id:2, name:"Settings"}
+    {id:2, name:"Settings"},
+    {id:3, name:"Profile"},
+    
 ]
 
 function Header(){
@@ -14,12 +16,38 @@ function Header(){
     return <>{elements}</>
 }
 
+
+function ShowPage(){
+    if (page == "Settings"){
+        return (
+        <div className="Settings_page">
+            <h1>Settings</h1>
+        </div>
+        );
+    }
+    if (page == "Dashboard"){
+        return (
+        <div className="Settings_page">
+            <h1>Dashboard</h1>
+        </div>
+        );
+    }
+    if (page == "Profile"){
+        return (
+        <div className="Settings_page">
+            <h1>Profile</h1>
+        </div>
+        );
+    }
+}
+
 function App() {
     return (
     <div>
         <div className="header">
             <Header />
         </div>
+        <ShowPage />
     </div>
     )
 }
