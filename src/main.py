@@ -7,6 +7,6 @@ def index():
 
 @app.route('/admin/<page>')
 def admin(page):
-    return render_template('adminpanel.html', page)
+    return render_template('adminpanel.html', page=page)
 
 app.run(host='0.0.0.0')
