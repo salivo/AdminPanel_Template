@@ -8,7 +8,7 @@
 body{
     margin: 0;
     padding: 0;
-    background-color: #e3e3e3;
+    background-color: #e3e3e3;  
 }
 
 
@@ -69,5 +69,43 @@ button:hover{
     padding: 20px 50px;
     display: flex;
     flex-direction: column;
+    gap: 15px;
+}
+.AuthCard{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.AuthinCard{
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 15px;
+}
+.AuthinCard h2{
+    margin: 0;
+    align-self: center;
+}
+.AuthinCard input{
+    width: 100%;
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;  
+}
+.AuthinCard button{
+    align-self: flex-end;
+}
+.AuthinCard div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     gap: 15px;
 }

@@ -1,11 +1,4 @@
 
-
-const header_elements = [
-    {id:"header_1", name:"Dashboard"},
-    {id:"header_1", name:"Settings"},
-];
-
-
 function ProfileCard(){
     return (
         <div className="CardCont">
@@ -37,49 +30,45 @@ function AccountCard(){
     );
 }
 
+function SimpleCard(){
+    return(
+        <div className="CardCont">
+            <h2>Simple Card Example</h2>
+            <form>
+                <label className="description_label">the card just write number to DB here you can test SQL injection</label>
+                <input type="text" id="new_nickname" name="nickname" value="1"></input>
+                <div>
+                    <button type="submit" value="Submit">+</button>
+                    <button type="submit" value="Submit">-</button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
 
 function Header(){
-    const elements = header_elements.map((element) =>
-        <div onClick={() => location.replace("/admin/"+element.name)} key={element.id} className={(element.name == page) ? 'header_element header_element_choosed' : 'header_element'}>
+    console.log(pages_to_show);
+    
+    const elements = header.map((element) =>
+        <div onClick={() => location.replace("/l/"+element.name)} key={element.id} className={(element.name == page) ? 'header_element header_element_choosed' : 'header_element'}>
             <h1>{element.name}</h1>
         </div>
     );
-    return <>{elements}</>
+    return <div className="header">{elements}</div>
 }
 
 
-function ShowPage(){
-    switch (page) {
-        case "Dashboard":
-            return (
-                <div className="page">
-                    <h1>Dashboard</h1>
-                </div>
-            );
-        case "Settings":
-            return (
-                <div className="page">
-                    <ProfileCard />
-                    <AccountCard />
-                </div>
-            );
-        
-    }
-}
+
 
 function App() {
-    return (
-    <div>
-        <div className="header">
-            <Header />
-        </div>
-        <ShowPage />
-    </div>
-    )
+    return(
+        <>
+            <Header/>
+            <ShowPage />
+        </>
+    );
 }
-
-
-
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 root.render(<App />);

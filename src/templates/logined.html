@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Admin Panel</title>
+        <title>Authenticate</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,14 +12,15 @@
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
         <link rel="stylesheet" href="../static/styles/style.css">
     </head>
     <body>
-        <div id="root"></div>
+        <div id="root" ></div>
         <script>
             var page = "{{ page }}";
+            var pages_to_show = "{{ pages_to_show }}";
         </script>
-        <script type="text/babel" src="../static/scripts/adminpanel.js" async defer></script>
+        <script type="text/babel" src="../static/scripts/{{ permsjs }}.js" async defer></script>
+        <script type="text/babel" src="../static/scripts/logined.js" async defer></script>
     </body>
 </html>
