@@ -5,7 +5,7 @@ function ProfileCard(){
             <h2>Public profile</h2>
             <form>
                 <label>Name</label>
-                <input type="text" id="new_nickname" name="nickname"></input>
+                <input type="text" id="new_nickname" name="nickname" value={fullname}></input>
                 <label className="description_label">Your name may appear around GitHub where you contribute or are mentioned. You can remove it at any time. </label>
                 <button type="submit" value="Submit">Update Profile</button>
             </form>
@@ -47,15 +47,26 @@ function SimpleCard(){
 }
 
 
+function Logout(){
+    return(
+        <h2 key="logout_button" onClick={() => location.replace("/logout")} >logout</h2>
+    )
+}
+
 function Header(){
     console.log(pages_to_show);
     
     const elements = header.map((element) =>
         <div onClick={() => location.replace("/"+element.name)} key={element.id} className={(element.name == page) ? 'header_element header_element_choosed' : 'header_element'}>
-            <h1>{element.name}</h1>
+            <h1 key={element.id+"_TEXT"}>{element.name}</h1>
         </div>
     );
-    return <div className="header">{elements}</div>
+    return (<div className="header" key="header">
+        <div className="header_pages" key="header_pages">
+            {elements} 
+        </div>
+        <Logout />
+    </div>);
 }
 
 
