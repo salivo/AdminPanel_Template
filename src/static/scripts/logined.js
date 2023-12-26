@@ -51,7 +51,7 @@ function Header(){
     console.log(pages_to_show);
     
     const elements = header.map((element) =>
-        <div onClick={() => location.replace("/l/"+element.name)} key={element.id} className={(element.name == page) ? 'header_element header_element_choosed' : 'header_element'}>
+        <div onClick={() => location.replace("/"+element.name)} key={element.id} className={(element.name == page) ? 'header_element header_element_choosed' : 'header_element'}>
             <h1>{element.name}</h1>
         </div>
     );

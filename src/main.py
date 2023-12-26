@@ -5,14 +5,12 @@ app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4rjojoejo%^&*@(*U@)UU@VF&@*9hg9ujhb8287TF@&FG*&@g9&^@g2yg8727286@%^%#$!&*Q8z\n\xec]/'
 
 
-
+@app.route('/')
+def index():
+    return redirect(url_for('logined', page="Home"))
 
 @app.route('/<page>')
-def index(page):
-    return render_template('index.html')
-
-@app.route('/l/<page>')
-def logined(page):
+def logined(page="Home"):
     return render_template('logined.html', page=page, permsjs="default")
 
 @app.route('/login', methods=['GET', 'POST'])
