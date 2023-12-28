@@ -7,14 +7,13 @@ function ShowPage(){
         case "Home":
             return (
                 <div className="page">
-                    <h1>Home</h1>
+                    <h1>Hello {fullname}!</h1>
                 </div>
             );
         case "Dashboard":
             return (
                 <div className="page">
-                    <h1>Dashboard</h1>
-                    <SimpleCard />
+                    <h1>Here can be stats or another info for personal</h1>
                 </div>
             );
         case "Settings":
@@ -27,7 +26,7 @@ function ShowPage(){
         case "AdminSettings":
             return (
                 <div className="page">
-                    <AddNewAdmin />
+                    <SetPermsLevel />
                 </div>
             );
         
@@ -37,13 +36,16 @@ function ShowPage(){
 
 // Admin Functions
 
-function AddNewAdmin(){
+function SetPermsLevel(){
     return(
         <div className="CardCont">
-            <h2>Add new Admin</h2>
-            <form>
-                <label>Email of new admin</label>
-                <input type="email" id="new_nickname" name="admin_email"></input>
+            <h2>Set Permision level for User</h2>
+            <form action="/setpermslevel" method="post">
+                <label>username</label>
+                <input type="text" id="username" name="username"></input>
+                <label>Permission level</label>
+                <input type="number" id="level" name="level" 
+                    min="0" max="1000"></input>
                 <button type="submit" value="Submit">Submit</button>
             </form>
         </div>

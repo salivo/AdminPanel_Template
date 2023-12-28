@@ -7,7 +7,7 @@ function ShowPage(){
         case "Home":
             return (
                 <div className="page">
-                    <h1>Hello {fullname}!</h1>
+                    <h1>Hello                                          {fullname}!</h1>
                 </div>
             );
         case "Settings":

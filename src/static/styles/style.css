@@ -24,6 +24,10 @@ button{
 button:hover{
     color: #3ebcff;
 }
+#root{
+    display: flex;
+    flex-direction: column;
+}
 .header{
     display: flex;
     flex-direction: row;
@@ -156,4 +160,37 @@ button:hover{
     margin: 0;
     padding: 0;
     font-size: 14px;
+}
+.error_margin{
+    margin: 15px auto 0 auto;
+}
+.info_div{
+    display: flex;
+    align-items: start;
+    flex-direction: column !important;
+    background-color: #deffda;
+    margin: 0 auto;
+    padding: 15px;
+    border-radius: 10px;
+    ;
+}
+.info_div h3{
+    color: #1f1f1f;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+.info_div h4{
+    color: #1f1f1f;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+.info_margin{
+    margin: 15px auto 0 auto;
+}
+
+#username_in_change_pass{
+    display: none;   
+    /* This needed for browsers pass auto save becouse I lazy */
 }

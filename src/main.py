@@ -13,6 +13,7 @@ min_fullname_size = int(config['register.settings']['min_fullname_size'])
 max_fullname_size = int(config['register.settings']['max_fullname_size'])
 min_password_size = int(config['register.settings']['min_password_size'])
 max_password_size = int(config['register.settings']['max_password_size'])
+can_change_perms_level = int(config['permission.settings']['can_change_perms_level'])
 app = Flask(__name__)
 
 connection = sqlite3.connect("server.db", check_same_thread=False)
@@ -22,6 +23,7 @@ app.secret_key = b'_5#y2L"F4rjojoejo%^&*@(*U@)UU@VF&@*9hg9ujhb8287TF@&FG*&@g9&^@
 
 levels = {
     0 : "default",
+    6 : "admin",
     7 : "admin"
 }
 
@@ -30,22 +32,73 @@ def returnlevel(username):
     for userdata in res.fetchall():
         if username in userdata:
             return userdata[1]
+
 def returnall(username):
     res = cursor.execute("SELECT username, email, fullname, verified, level FROM users")
     for userdata in res.fetchall():
         if username in userdata:
             return (userdata[1], userdata[2], userdata[3], userdata[4])
+
+def CheckCreatedPassword(password, retyped_password):
+
+    if password != retyped_password:
+        error = "Passwords are not same!",
+        error_desc = "Try again"
+        return (error, error_desc)
+
+    if len(password) < min_password_size:
+        error = "Password is too short!",
+        error_desc = "Please choose another password"
+        return (error, error_desc)
+    
+    if len(password) > max_password_size:
+        error = "password is too long!",
+        error_desc = "Please choose another password"
+        return (error, error_desc)
+
+    elif not re.search("[a-z]", password):
+        error = "password must have at least one lowercase letter!",
+        error_desc = "Please choose another password"
+        return (error, error_desc)
+
+    elif not re.search("[A-Z]", password):
+        error = "password must have at least one capital letter!",
+        error_desc = "Please choose another password"
+        return (error, error_desc)
+
+    elif not re.search("[0-9]", password): 
+        error = "password must have at least one capital number!",
+        error_desc = "Please choose another password"
+        return (error, error_desc)
+
+    return ("", "")
+
+
+
+
 @app.route('/')
 def index():
-    if session['username']:
-        return redirect(url_for('logined', page="Home"))
-    else:
+
+    session['info'] = ""
+    session['error'] = ""
+
+    if not 'username' in session:
         return redirect(url_for('login'))
+    if not session['username']:
+        return redirect(url_for('login'))
+    return redirect(url_for('logined', page="Home"))
+        
 
 @app.route('/<page>')
 def logined(page="Home"):
+    error = session['error']
+    info = session['info']
+    
+    session['error'] = ""
+    session['info'] = ""
+
     if session['username']:
-        return render_template('logined.html', page=page, permsjs=levels[returnlevel(session['username'])], fullname = returnall(session['username'])[1])
+        return render_template('logined.html', page=page, permsjs=levels[returnlevel(session['username'])], fullname = returnall(session['username'])[1], username = session['username'], error=error, info=info)
     else:
         return redirect(url_for('login'))
 
@@ -131,35 +184,11 @@ def register():
             )
         # TODO: email check
         # password Check
-        if request.form['password'] != request.form['retyped-password']:
+        error, error_desc = CheckCreatedPassword(request.form['password'],request.form['retyped-password'])
+        if error:
             return render_template("auth.html", register="true", 
-                error = "Passwords are not same!",
-                error_desc = "Try again"
-            )
-        if len(request.form['password']) < min_password_size:
-            return render_template("auth.html", register="true", 
-                error = "Password is too short!",
-                error_desc = "Please choose another password"
-            )
-        if len(request.form['password']) > max_password_size:
-            return render_template("auth.html", register="true", 
-                error = "password is too long!",
-                error_desc = "Please choose another password"
-            )
-        elif not re.search("[a-z]", request.form['password']):
-            return render_template("auth.html", register="true", 
-                error = "password must have at least one lowercase letter!",
-                error_desc = "Please choose another password"
-            )
-        elif not re.search("[A-Z]", request.form['password']):
-            return render_template("auth.html", register="true", 
-                error = "password must have at least one capital letter!",
-                error_desc = "Please choose another password"
-            )
-        elif not re.search("[0-9]", request.form['password']):
-            return render_template("auth.html", register="true", 
-                error = "password must have at least one capital number!",
-                error_desc = "Please choose another password"
+                    error = error,
+                    error_desc = error_desc
             )
         # Saving all to database
         password = bytes(request.form['password'], 'utf-8')
@@ -181,4 +210,56 @@ def register():
 def logout():
     session['username'] = None
     return redirect(url_for('index'))
+
+@app.route('/setpermslevel', methods=['POST'])
+def setpermslevel():
+    if request.method == 'POST':
+
+        if can_change_perms_level <= returnlevel(session['username']): 
+            res = cursor.execute("SELECT username FROM users")
+            users = res.fetchall()
+            toadd = request.form['username']
+            isintable = False
+            for user in users:
+                if toadd in user:
+                    isintable = True
+            if isintable:
+                new_level = int(request.form['level'])
+                cursor.execute("UPDATE users SET level = ? WHERE username = ?", (new_level, toadd))
+                connection.commit()
+                session['info'] = """Successfully set """ + request.form['level'] + """ permission level for """ + toadd
+                return redirect(url_for('logined', page="AdminSettings"))
+            else:
+                session['error'] = """cannot find user with that username"""
+                return redirect(url_for('logined', page="AdminSettings"))
+        else:
+            session['error'] = """You cannot perform it! Not enough rights"""
+            return redirect(url_for('logined', page="AdminSettings")) 
+@app.route('/setfullname', methods=['POST'])
+def setfullname():
+    if request.method == 'POST': 
+            new_fullname = request.form['new_fullname']
+            cursor.execute("UPDATE users SET fullname = ? WHERE username = ?", (new_fullname, session['username']))
+            connection.commit()
+            session['info'] = """Successfully set """ + new_fullname
+            return redirect(url_for('logined', page="Settings"))
+@app.route('/setnewpass', methods=['POST'])
+def setnewpass():
+    if request.method == 'POST':
+        error, error_desc = CheckCreatedPassword(request.form['password'],request.form['retyped-password'])
+        if error:
+            session['error'] = error
+            return redirect(url_for('logined', page="Settings"))
+        new_password = bytes(request.form['password'], 'utf-8')
+        new_salt = bcrypt.gensalt()
+        new_hashed = bcrypt.hashpw(new_password, new_salt)
+        cursor.execute("UPDATE users SET password = ?, salt = ? WHERE username = ?", (new_hashed, new_salt, session['username']))
+        connection.commit()
+        session['info'] = """Successfully set new password!"""
+        return redirect(url_for('logined', page="Settings"))
+
+
+
+
 app.run(host='0.0.0.0')
+connection.close()

@@ -3,9 +3,9 @@ function ProfileCard(){
     return (
         <div className="CardCont">
             <h2>Public profile</h2>
-            <form>
-                <label>Name</label>
-                <input type="text" id="new_nickname" name="nickname" value={fullname}></input>
+            <form action="/setfullname" method="post">
+                <label>Full Name</label>
+                <input type="text" id="new_fullname" name="new_fullname" defaultValue={fullname} onChange={(e) => setFullname(e.target.value)}></input>
                 <label className="description_label">Your name may appear around GitHub where you contribute or are mentioned. You can remove it at any time. </label>
                 <button type="submit" value="Submit">Update Profile</button>
             </form>
@@ -17,12 +17,12 @@ function AccountCard(){
     return (
         <div className="CardCont">
             <h2>Change password</h2>
-            <form>
+            <form action="/setnewpass" method="post">
                 <label>New password</label>
-                <input type="text" id="new_nickname" name="nickname"></input>
-
-                <label>Confirm new password</label>
-                <input type="text" id="new_nickname" name="nickname"></input>
+                <input type="text" id="username_in_change_pass" name="username" value={username}></input>
+                <input type="password" id="password" name="password"></input>
+                <label>Retype new password</label>
+                <input type="password" id="retyped-password" name="retyped-password"></input>
                 <label className="description_label">Your name may appear around GitHub where you contribute or are mentioned. You can remove it at any time. </label>
                 <button type="submit" value="Submit">Change password</button>
             </form>
@@ -30,6 +30,7 @@ function AccountCard(){
     );
 }
 
+// TODO: maybe i do it in future, now it not needed
 function SimpleCard(){
     return(
         <div className="CardCont">
@@ -45,7 +46,6 @@ function SimpleCard(){
         </div>
     );
 }
-
 
 function Logout(){
     return(
@@ -69,13 +69,22 @@ function Header(){
     </div>);
 }
 
-
-
-
 function App() {
     return(
         <>
             <Header/>
+            {error && (
+                        <div className="error_div error_margin" >
+                        <h3>{error}</h3>
+                        <h4>{error_desc}</h4>
+                        </div>
+                    )}
+            {info && (
+                        <div className="info_div info_margin" >
+                        <h3>{info}</h3>
+                        <h4>{info_desc}</h4>
+                        </div>
+                    )}
             <ShowPage />
         </>
     );
