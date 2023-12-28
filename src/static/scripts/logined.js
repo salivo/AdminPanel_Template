@@ -53,6 +53,24 @@ function Logout(){
     )
 }
 
+
+function TrigerMenu() {
+    if (document.getElementById("small_header").style.display == "flex"){
+        document.getElementById("small_header").style.display = "none";
+        
+    }
+    else{
+        document.getElementById("small_header").style.display = "flex";
+    }
+}
+
+function MenuButton(){
+    return(
+    <div className="menu-button" id="menu-button" onClick={TrigerMenu}>
+        <i class="fa-solid fa-bars"></i>
+    </div>
+    )
+}
 function Header(){
     console.log(pages_to_show);
     
@@ -62,6 +80,7 @@ function Header(){
         </div>
     );
     return (<div className="header" key="header">
+        <MenuButton />
         <div className="header_pages" key="header_pages">
             {elements} 
         </div>
@@ -69,10 +88,20 @@ function Header(){
     </div>);
 }
 
+function HeaderForSmallDevices(){
+    const elements = header.map((element) =>
+        <div onClick={() => location.replace("/"+element.name)} key={element.id} className={(element.name == page) ? 'small_header_element small_header_element_choosed' : 'small_header_element'}>
+            <h1 key={element.id+"_TEXT"}>{element.name}</h1>
+        </div>
+    );
+    return (<div className="small_header" key="small_header" id="small_header">{elements}</div>);
+}
+
 function App() {
     return(
         <>
             <Header/>
+            <HeaderForSmallDevices />
             {error && (
                         <div className="error_div error_margin" >
                         <h3>{error}</h3>

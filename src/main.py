@@ -110,15 +110,37 @@ def login():
 
         if "@" in emailoraddres:
             #find by email in db and get username
-            session['username'] = emailoraddres
-            print("email")
+            res = cursor.execute("SELECT email FROM users")
+            emails = res.fetchall()
+            is_in_emails = False
+            for email in emails:
+                if emailoraddres in email:
+                    is_in_emails = True
+            if not is_in_emails:
+                return render_template("auth.html", register="false", 
+                    error = "User with that email not exists!",
+                    error_desc = "You can create a new accaunt or you have a mistake"
+                    )
+            res = cursor.execute("SELECT email, username, password, salt FROM users")
+            for userdata in res.fetchall():
+                if emailoraddres in userdata:
+                    saved_username = userdata[1]
+                    saved_password = userdata[2]
+                    saved_salt = userdata[3]
+            check_hashed = bcrypt.hashpw(bytes(request.form['password'], "utf-8"), saved_salt)
+            if not check_hashed == saved_password:
+                return render_template("auth.html", register="false", 
+                    error = "Wrong password!",
+                    error_desc = "Try again!"
+                    )
+            session['username'] = saved_username
+            
         else:
             #find by username
             res = cursor.execute("SELECT username FROM users")
             users = res.fetchall()
             is_in_usernames = False
             for user in users:
-                print(user, emailoraddres)
                 if emailoraddres in user:
                     is_in_usernames = True
             if not is_in_usernames:
@@ -137,21 +159,18 @@ def login():
                     error = "Wrong password!",
                     error_desc = "Try again!"
                     )
-            #TODO: fast request block 
-
-            session['username'] = emailoraddres
-            print("username")
-
-        print(password)
-
+            session['username'] = saved_username
+            #TODO: block many request per time
         return redirect(url_for('index'))
+
     return render_template("auth.html", register="false")
+
+
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        
-
-        # TODO: save data and password-hash to DB 
         res = cursor.execute("SELECT username FROM users")
         users = res.fetchall()
         # FullName Check
@@ -166,6 +185,7 @@ def register():
                 error_desc = "Please choose another full name"
             )
         # UserName Check
+        # FIXME:   in username can't be @ symbol it will brake anything
         for user in users:
             if request.form['username'] in user:
                 return render_template("auth.html", register="true", 

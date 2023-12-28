@@ -194,3 +194,49 @@ button:hover{
     display: none;   
     /* This needed for browsers pass auto save becouse I lazy */
 }
+.menu-button{
+    color: #fff;
+    font-size: 35px;
+    display: none;
+    justify-content: baseline;
+    align-items: center;
+}
+@media (max-width: 700px) {
+    .header_pages {
+      display: none;
+    }
+    .menu-button{
+        display: flex;
+    }
+}
+@media (min-width: 700px) {
+    .small_header{
+        display: none;
+    }
+}
+.small_header{
+    display: none;
+    flex-direction: column;
+    padding: 15px 0;
+    border-top: solid 1px #2a2a2a;
+    background-color: #1f1f1f;
+    justify-content: space-between;
+}
+
+
+.small_header_element{
+    color: #fff;
+    padding: 0 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.small_header_element:hover{
+    color: #3ebcff;
+}
+.small_header_element h1{
+    font-size: 20px;
+}
+.small_header_element_choosed{
+    border-left: 3px solid #3ebcff;
+    color: #3ebcff
+}
