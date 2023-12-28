@@ -134,7 +134,7 @@ def login():
                     error_desc = "Try again!"
                     )
             session['username'] = saved_username
-            
+
         else:
             #find by username
             res = cursor.execute("SELECT username FROM users")
@@ -159,7 +159,7 @@ def login():
                     error = "Wrong password!",
                     error_desc = "Try again!"
                     )
-            session['username'] = saved_username
+            session['username'] = emailoraddres
             #TODO: block many request per time
         return redirect(url_for('index'))
 
